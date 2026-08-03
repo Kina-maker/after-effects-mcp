@@ -18,6 +18,20 @@ const defaultLogger: Logger = {
   error: (msg: string, meta?: any) => console.error('[ERROR]', msg, meta || '')
 };
 
+/**
+ * Resolve the folder that holds the command/response files exchanged with
+ * the CEP extension. This intentionally avoids the "My Documents" folder:
+ * on machines with OneDrive Known Folder Move enabled, Node's view of that
+ * folder (via os.homedir()/registry lookups) and the CEP extension's
+ * ExtendScript side (Folder.myDocuments) can resolve to two different
+ * physical paths — especially when OneDrive has been re-linked or renamed —
+ * so every command silently times out. A fixed, non-redirectable path under
+ * the user's profile keeps both sides pointed at the same folder.
+ */
+function resolveCommandsFolder(): string {
+  return path.join(os.homedir(), '.ae-mcp-commands');
+}
+
 export class FileCommunicator {
   private commandsFolder: string;
   private clientPrefix: string;
@@ -40,9 +54,8 @@ export class FileCommunicator {
     // Generate unique client prefix
     this.clientPrefix = `client_${process.pid}_${Date.now()}`;
 
-    // Set up commands folder in user's Documents
-    const documentsPath = path.join(os.homedir(), 'Documents');
-    this.commandsFolder = path.join(documentsPath, 'ae-mcp-commands');
+    // Fixed, non-redirectable commands folder (see resolveCommandsFolder)
+    this.commandsFolder = resolveCommandsFolder();
 
     this.logger.info('FileCommunicator initialized', {
       clientPrefix: this.clientPrefix,

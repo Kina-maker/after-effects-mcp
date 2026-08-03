@@ -18,9 +18,13 @@ var AEMCP = {
  * Initialize the MCP bridge
  */
 function initMCP() {
-  // Set up commands folder in Documents
-  var documentsPath = Folder.myDocuments.fsName;
-  AEMCP.commandsFolder = new Folder(documentsPath + "/ae-mcp-commands");
+  // Fixed, non-redirectable commands folder. Folder.myDocuments can resolve
+  // to a different physical path than the Node server's view of "Documents"
+  // on machines where OneDrive Known Folder Move is enabled (or has been
+  // re-linked/renamed), silently breaking the file-based bridge. Using a
+  // fixed path under the user profile keeps both sides in agreement.
+  var homeDir = $.os.indexOf("Windows") !== -1 ? $.getenv("USERPROFILE") : $.getenv("HOME");
+  AEMCP.commandsFolder = new Folder(homeDir + "/.ae-mcp-commands");
 
   if (!AEMCP.commandsFolder.exists) {
     AEMCP.commandsFolder.create();
