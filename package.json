@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Advanced After Effects MCP server for motion graphics productivity",
   "type": "module",
+  "packageManager": "npm@11.11.0",
   "main": "dist/index.js",
   "bin": {
     "ae-mcp": "./dist/index.js"
