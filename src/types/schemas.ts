@@ -404,7 +404,7 @@ export const ApplyExpressionTemplateSchema = z.object({
     // Physics
     'bounce', 'inertia', 'overshoot', 'springy'
   ]),
-  params: z.record(z.any()).optional()
+  params: z.record(z.string(), z.any()).optional()
 });
 
 // ============================================
@@ -417,7 +417,7 @@ export const ApplyEffectSchema = z.object({
   layerIndex: z.number().int().positive().optional(),
   layerName: z.string().optional(),
   effect: z.string(),
-  properties: z.record(z.any()).optional()
+  properties: z.record(z.string(), z.any()).optional()
 });
 
 export const ApplyEffectTemplateSchema = z.object({
@@ -437,7 +437,7 @@ export const ApplyEffectTemplateSchema = z.object({
     'chromaticAberration', 'duotone'
   ]),
   intensity: z.number().min(0).max(100).optional(),
-  customParams: z.record(z.any()).optional()
+  customParams: z.record(z.string(), z.any()).optional()
 });
 
 export const ModifyEffectPropertiesSchema = z.object({
@@ -447,7 +447,7 @@ export const ModifyEffectPropertiesSchema = z.object({
   layerName: z.string().optional(),
   effectIndex: z.number().int().positive().optional(),
   effectName: z.string().optional(),
-  properties: z.record(z.any())
+  properties: z.record(z.string(), z.any())
 });
 
 export const RemoveEffectSchema = z.object({
@@ -656,7 +656,7 @@ export const ExportFrameSchema = z.object({
 export const BatchExecuteSchema = z.object({
   operations: z.array(z.object({
     tool: z.string(),
-    params: z.record(z.any())
+    params: z.record(z.string(), z.any())
   })),
   mode: z.enum(['sequential', 'parallel']).optional(),
   stopOnError: z.boolean().optional()
@@ -680,7 +680,7 @@ export const BatchCreateLayersSchema = z.object({
   compName: z.string().optional(),
   layers: z.array(z.object({
     type: z.enum(['solid', 'text', 'shape', 'null', 'adjustment']),
-    params: z.record(z.any())
+    params: z.record(z.string(), z.any())
   }))
 });
 
